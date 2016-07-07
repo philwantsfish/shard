@@ -40,7 +40,7 @@ object Runner extends LazyLogging {
     logger.info(s"Failed authentication for ${failedResults.size} sites:")
     failedResults.foreach { name => logger.info(s"\t$name") }
 
-    logger.info(s"Discovered ${successfulResults.size} successful authentications:")
+    logger.info(s"Discovered credentials for ${successfulResults.size} sites:")
     successfulResults.foreach { name => logger.info(s"\t$name") }
 
   }
