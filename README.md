@@ -19,7 +19,7 @@ Available modules:
 Given a username and password shard will attempt to authenticate with multiple sites:
 
 ``` bash
-$ java -jar shard-1.0.jar -u <redacted> -p <redacted>
+$ java -jar shard-1.0.jar -u <redacted-username> -p <redacted-password>
 - Tried credentials on 5 sites
 - Failed authentication for 2 sites:
 -      Reddit
