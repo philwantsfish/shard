@@ -32,7 +32,7 @@ $ java -jar shard-1.0.jar -u <redacted> -p <redacted>
 
 ## Installation
 
-Grab the latest release from the release tab, which was built as a fat jar using sbt assembly.
+Grab the latest release from the [release tab](https://github.com/philwantsfish/shard/releases), which was built as a fat jar using sbt assembly.
 
 or
 
