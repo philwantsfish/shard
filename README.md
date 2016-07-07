@@ -21,10 +21,10 @@ Given a username and password shard will attempt to authenticate with multiple s
 ``` bash
 $ java -jar shard-1.0.jar -u <redacted> -p <redacted>
 - Tried credentials on 5 sites
-- Discovered 2 failed authentications:
+- Failed authentication for 2 sites:
 -      Reddit
 -      Instagram
-- Discovered 3 successful authentications:
+- Discovered credentials for 3 sites:
 -      Facebook
 -      LinkedIn
 -      Twitter
