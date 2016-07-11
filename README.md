@@ -4,7 +4,24 @@
 
 A command line tool to detect shared passwords
 
-## Example Usage
+## Usage
+
+List options:
+
+```
+$ java -jar shard-1.1.jar --help
+Shard 1.1
+Usage: java -jar shard-1.0.jar [options]
+
+  -u, --username <value>  Username to test
+  -p, --password <value>  Password to test
+  -f, --file <value>      File containing a set of credentials
+  --format <value>        The format of the credentials. Must be a regular expression with 2 capture groups. The first capture group for the username and the second capture group for the password. Defaults to a regex that will match:
+	"username":"password"
+  -l, --list              List available modules
+  -v, --version <value>   Print the version
+  --help                  prints this usage text
+```
 
 List available modules:
 
@@ -17,6 +34,7 @@ Available modules:
         Twitter
         Instagram
 ```
+## Examples
 
 Given a username and password shard will attempt to authenticate with multiple sites:
 
