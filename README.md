@@ -39,7 +39,7 @@ Grab the latest release from the [release tab](https://github.com/philwantsfish/
 
 or
 
-Build it yourself using sbt, `sub assembly`
+Build it yourself using sbt, `sbt assembly`
  
 
 ## Developing a new module
