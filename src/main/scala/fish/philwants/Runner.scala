@@ -11,7 +11,7 @@ case class Credentials(username: String, password: String) {
 case class SortedResults(successfulResults: Seq[SuccessfulLogin], failedResults: Seq[FailedLogin])
 
 object Runner extends LazyLogging {
-  val defaultCredentialRegex = """"([^"]+)":"([^"]+)""""
+  val defaultCredentialRegex = """"((?:\"|[^"])+)":"((?:\"|[^"])+)""""
   val versionNumber = "1.1"
 
   def singleCredentialMode(username: String, password: String): Unit = {
@@ -82,7 +82,7 @@ object Runner extends LazyLogging {
                      version: Boolean = false
                      )
 
-    val parser = new scopt.OptionParser[Config]("java -jar shard-1.0.jar") {
+    val parser = new scopt.OptionParser[Config](s"java -jar shard-$versionNumber.jar") {
       head("Shard", versionNumber)
 
       opt[String]('u', "username")

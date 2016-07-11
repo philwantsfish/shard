@@ -1,6 +1,5 @@
 package fish.philwants
 
-import fish.philwants.Runner.Credentials
 import fish.philwants.modules.{FailedLogin, InstagramModule, SuccessfulLogin, TwitterModule}
 import org.scalatest.{Matchers, FlatSpec}
 import TestCredentials._
