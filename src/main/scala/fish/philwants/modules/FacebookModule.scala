@@ -1,6 +1,6 @@
 package fish.philwants.modules
 
-import fish.philwants.Runner.Credentials
+import fish.philwants.Credentials
 import fish.philwants.modules.TwitterModule._
 import org.jsoup.{Connection, Jsoup}
 import scala.collection.JavaConversions._

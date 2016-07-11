@@ -1,6 +1,6 @@
 package fish.philwants.modules
 
-import fish.philwants.Runner.Credentials
+import fish.philwants.Credentials
 import fish.philwants.modules.FacebookModule._
 import org.jsoup.nodes.FormElement
 import org.jsoup.{Connection, Jsoup}

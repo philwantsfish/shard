@@ -18,3 +18,5 @@ libraryDependencies ++= Seq(
 resolvers += Resolver.sonatypeRepo("public")
 
 mainClass in Compile := Some("fish.philwants.Runner")
+
+test in assembly := {}

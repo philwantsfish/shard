@@ -1,6 +1,6 @@
 package fish.philwants.modules
 
-import fish.philwants.Runner.Credentials
+import fish.philwants.Credentials
 import org.jsoup.{Connection, Jsoup}
 import collection.JavaConverters._
 
@@ -19,6 +19,8 @@ object RedditModule extends AbstractModule {
     val post_data = Map("user" -> creds.username, "passwd" -> creds.password, "api_type" -> "json").asJava
     val uri = s"http://www.reddit.com/api/login/"
 
+    import scala.concurrent.duration._
+
     Jsoup
       .connect(uri)
       .method(Connection.Method.POST)
@@ -26,6 +28,7 @@ object RedditModule extends AbstractModule {
       .header("Content-Type", "application/x-www-form-urlencoded")
       .header("User-Agent", randUserAgent)
       .data(post_data)
+      .timeout(7.seconds.toMillis.toInt)
       .execute()
       .body()
   }

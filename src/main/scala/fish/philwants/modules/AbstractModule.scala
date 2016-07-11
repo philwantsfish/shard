@@ -1,7 +1,6 @@
 package fish.philwants.modules
 
-import fish.philwants.Runner
-import Runner.Credentials
+import fish.philwants.Credentials
 
 trait AbstractModule {
   // The URI of the website
