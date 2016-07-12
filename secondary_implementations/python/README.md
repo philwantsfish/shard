@@ -3,7 +3,7 @@
 
 ## Install Instructions
 
-1. Install Python 2.7+ but not Python 3.0+
+1. Install Python 2.7+ or Python 3.5+
 2. Download this folder
 3. Install dependencies with `sudo pip -r requirements.txt`
 4. Use with `python shard.py -l` for checking loaded modules
