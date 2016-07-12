@@ -9,9 +9,9 @@ A command line tool to detect shared passwords
 List options:
 
 ```
-$ java -jar shard-1.1.jar --help
-Shard 1.1
-Usage: java -jar shard-1.0.jar [options]
+$ java -jar shard-1.2.jar --help
+Shard 1.2
+Usage: java -jar shard-1.2.jar [options]
 
   -u, --username <value>  Username to test
   -p, --password <value>  Password to test
@@ -26,7 +26,7 @@ Usage: java -jar shard-1.0.jar [options]
 List available modules:
 
 ``` bash
-$ java -jar shard-1.1.jar -l
+$ java -jar shard-1.2.jar -l
 Available modules:
         Facebook
         LinkedIn
@@ -39,18 +39,18 @@ Available modules:
 Given a username and password shard will attempt to authenticate with multiple sites:
 
 ``` bash
-$ java -jar shard-1.1.jar -u username-here -p password-here
+$ java -jar shard-1.2.jar -u username-here -p password-here
 21:16:25.950 [+] Running in single credential mode
 21:16:30.302 [+] username-here:password-here - Reddit, Instagram
 ```
 To test multiple credentials supply a filename. By default this expects one credential per line in the format `"username":"password"`. Custom formats can be supplied with the `--format` option
 
 ```
-$ java -jar shard-1.1.jar -f /tmp/creds.txt
+$ java -jar shard-1.2.jar -f /tmp/creds.txt
 21:16:39.501 [+] Running in multi-credential mode
-21:16:39.516 [+] Found 2 credentials
+21:16:39.516 [+] Parsed 2 credentials
 21:16:42.794 [+] username1:password1 - Reddit, Instagram
-21:16:45.189 [+] username2:password2 - No results
+21:16:45.189 [+] username2:password2 - Facebook, LinkedIn, Twitter
 ```
 
 ## Installation
@@ -68,10 +68,10 @@ Adding a new module is easy. Create a new class that inherits from `AbstractModu
 
 The AbstractModule has one abstract method:
 ``` scala
-  def tryLogin(creds: Credentials): LoginResult
+  def tryLogin(creds: Credentials): Boolean
 ```
 
-This method takes a Credentials object and returns either a SuccessfulLogin or FailedLogin object. I recommend using the TwitterModule as an template.
+This method takes a Credentials object and returns a boolean indicating a successful login. I recommend using the TwitterModule as an template.
 
 Dependencies:
 - JSoup is used for HTTP communication and HTML parsing 
