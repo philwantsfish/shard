@@ -1,7 +1,9 @@
 package fish.philwants.modules
 
-import fish.philwants.Runner
-import Runner.Credentials
+import fish.philwants.Credentials
+import org.jsoup.{Connection, Jsoup}
+import scala.concurrent.duration._
+import scala.util.{Failure, Success, Try}
 
 trait AbstractModule {
   // The URI of the website
@@ -10,8 +12,8 @@ trait AbstractModule {
   // The name of the module
   val moduleName: String
 
-  // Given credentials return a LoginResult
-  def tryLogin(creds: Credentials): LoginResult
+  // A method to check if the given credentials can log in
+  def tryLogin(creds: Credentials): Boolean
 
   // Pick a random User-Agent for each request
   def randUserAgent: String = {
@@ -22,9 +24,36 @@ trait AbstractModule {
     userAgentHeaders(randIndex)
   }
 
+  def post(uri: String): Connection = {
+    Jsoup
+      .connect(uri)
+      .method(Connection.Method.POST)
+      .ignoreContentType(true)
+      .header("User-Agent", useragent)
+      .timeout(defaultTimeout)
+  }
+
+  def get(uri: String): Connection = {
+    Jsoup
+      .connect(uri)
+      .method(Connection.Method.GET)
+      .ignoreContentType(true)
+      .header("User-Agent", useragent)
+      .timeout(defaultTimeout)
+  }
+
+  def tryCredential(creds: Credentials): Boolean = {
+    // Occasionally a SocketTimeoutException occurs. Retry the module before giving up
+    val tryResult = Try(tryLogin(creds)) match {
+      case Success(result) => Success(result)
+      case Failure(e) => Try(tryLogin(creds))
+    }
+
+    tryResult.getOrElse(false)
+  }
+
   val useragent = randUserAgent
+  val defaultTimeout = 30.seconds.toMillis.toInt
 }
 
-trait LoginResult
-case class SuccessfulLogin(creds: Credentials, moduleName: String, uri: String) extends LoginResult
-case class FailedLogin(creds: Credentials, moduleName: String, uri: String) extends LoginResult
+
