@@ -2,11 +2,9 @@ package fish.philwants.modules
 
 import fish.philwants.Credentials
 import org.jsoup.Connection.Response
-import org.jsoup.nodes.FormElement
 import org.jsoup.{Connection, Jsoup}
 import scala.collection.JavaConversions._
 import spray.json._
-import spray.json.DefaultJsonProtocol._
 
 
 object InstagramModule extends AbstractModule {
@@ -15,14 +13,10 @@ object InstagramModule extends AbstractModule {
   import JsonFormats._
 
   // Given credentials return a LoginResult
-  override def tryLogin(creds: Credentials): LoginResult = {
-    val loginUri = "https://www.instagram.com/accounts/login/"
-
+  override def tryLogin(creds: Credentials): Boolean = {
     // Request the login page for the form and cookies
-    val resp = Jsoup.connect(loginUri)
-      .method(Connection.Method.GET)
-      .header("User-Agent", useragent)
-      .execute()
+    val loginUri = "https://www.instagram.com/accounts/login/"
+    val resp = get(loginUri).execute()
 
     // Update the form data to include username and password
     val params = Map("username" -> creds.username, "password" -> creds.password)
@@ -30,23 +24,18 @@ object InstagramModule extends AbstractModule {
     // Send login request
     val loginUri2 = "https://www.instagram.com/accounts/login/ajax/"
 
-    val loginResp = Jsoup
-      .connect(loginUri2)
-      .method(Connection.Method.POST)
-      .header("User-Agent", useragent)
+    val loginResp = post(loginUri2)
       .header("Content-Type", "application/x-www-form-urlencoded")
       .header("X-CSRFToken", resp.cookie("csrftoken"))
       .header("Accept", "*/*")
       .header("Referer", "https://www.instagram.com")
-      .ignoreContentType(true)
       .data(params)
       .cookies(resp.cookies())
       .followRedirects(false)
       .execute()
 
     // Check login result
-    if(isLoginSuccessful(loginResp)) SuccessfulLogin(creds, moduleName, uri)
-    else FailedLogin(creds, moduleName, uri)
+    isLoginSuccessful(loginResp)
   }
 
   def isLoginSuccessful(resp: Response): Boolean = {

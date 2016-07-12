@@ -15,11 +15,8 @@ object TwitterModule extends AbstractModule {
    * a session cookie. Visit the login page, persist the cookies, submit the form with the hidden
    * parameter
    */
-  def tryLogin(creds: Credentials): LoginResult = {
-    val resp = Jsoup.connect(uri)
-      .method(Connection.Method.GET)
-      .header("User-Agent", useragent)
-      .execute()
+  def tryLogin(creds: Credentials): Boolean = {
+    val resp = get(uri).execute()
 
     // Parse the form the response
     val form: FormElement = resp
@@ -39,9 +36,7 @@ object TwitterModule extends AbstractModule {
 
     // Send login request
     val loginUri = "https://twitter.com/sessions"
-    val loginResp = Jsoup
-      .connect(loginUri)
-      .method(Connection.Method.POST)
+    val loginResp = post(loginUri)
       .header("User-Agent", useragent)
       .header("Content-Type", "application/x-www-form-urlencoded")
       .data(updatedFormData)
@@ -50,8 +45,7 @@ object TwitterModule extends AbstractModule {
       .execute()
 
     // Check login result
-    if(isLoginSuccessful(loginResp)) SuccessfulLogin(creds, moduleName, uri)
-    else FailedLogin(creds, moduleName, uri)
+    isLoginSuccessful(loginResp)
   }
 
   def isLoginSuccessful(resp: Response): Boolean = {

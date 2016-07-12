@@ -1,35 +1,39 @@
 package fish.philwants
 
 import com.typesafe.scalalogging.LazyLogging
-import fish.philwants.modules.{LoginResult, FailedLogin, SuccessfulLogin, RedditModule}
+import fish.philwants.modules._
 import scala.io.{BufferedSource, Source}
 import scala.util.matching.Regex
 
 case class Credentials(username: String, password: String) {
   override def toString: String = { s"$username:$password" }
 }
-case class SortedResults(successfulResults: Seq[SuccessfulLogin], failedResults: Seq[FailedLogin])
+
+case class ValidCredentials(creds: Credentials, modules: Seq[AbstractModule])
 
 object Runner extends LazyLogging {
   val defaultCredentialRegex = """"((?:\"|[^"])+)":"((?:\"|[^"])+)""""
-  val versionNumber = "1.1"
+  val versionNumber = "1.2"
 
   def singleCredentialMode(username: String, password: String): Unit = {
     logger.info("Running in single credential mode")
     val creds = Credentials(username, password)
-    val results = tryCredential(creds)
-    printResult(creds, results)
+    printResults(tryCredential(creds))
   }
 
   def multiCredentialMode(path: String, format: String): Unit = {
     logger.info("Running in multi-credential mode")
     val credentialRegex = if (format.nonEmpty) format else defaultCredentialRegex
     val creds = parseCredsFromFile(Source.fromFile(path), credentialRegex.r)
-    logger.info(s"Found ${creds.size} credentials")
+    logger.info(s"Parsed ${creds.size} credentials")
 
-    creds.foreach { cred =>
-      printResult(cred, tryCredential(cred))
-    }
+    creds
+      .map { c => tryCredential(c) }
+      .foreach { vc => printResults(vc) }
+  }
+
+  def tryCredential(creds: Credentials): ValidCredentials = {
+    ValidCredentials(creds, ModuleFactory.modules.filter { m => m.tryCredential(creds) })
   }
 
   def parseCredsFromFile(path: BufferedSource, credentialRegex: Regex): Stream[Credentials] = {
@@ -41,33 +45,12 @@ object Runner extends LazyLogging {
     }
   }
 
-  def tryCredential(creds: Credentials): SortedResults = {
-    val results = ModuleFactory.modules.map { m => m.tryLogin(creds)}
-
-    val groupedResults = results.groupBy {
-      case _: SuccessfulLogin => "success"
-      case _: FailedLogin => "failed"
-    }
-
-    val successfulResults = groupedResults
-      .getOrElse("success", Seq())
-      .map { r => r.asInstanceOf[SuccessfulLogin] }
-//      .map { r => r.moduleName }
-
-    val failedResults = groupedResults
-      .getOrElse("failed", Seq())
-      .map { r => r.asInstanceOf[FailedLogin] }
-//      .map { r => r.moduleName }
-
-    SortedResults(successfulResults, failedResults)
-  }
-
-  def printResult(creds: Credentials, results: SortedResults): Unit = {
-    if (results.successfulResults.size <= 0) {
-      logger.info(s"$creds - No results")
+  def printResults(vc: ValidCredentials): Unit = {
+    if (vc.modules.size <= 0) {
+      logger.info(s"${vc.creds} - No results")
     } else {
-      val successfulModuleNames = results.successfulResults.map { m => m.moduleName }.mkString(", ")
-      logger.info(s"$creds - $successfulModuleNames")
+      val successfulModuleNames = vc.modules.map { m => m.moduleName }.mkString(", ")
+      logger.info(s"${vc.creds} - $successfulModuleNames")
     }
   }
 

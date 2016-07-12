@@ -10,5 +10,4 @@ object ModuleFactory {
     TwitterModule,
     InstagramModule
   )
-
 }
