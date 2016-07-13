@@ -22,6 +22,12 @@ object TestCredentials {
   val TWITTER_USERNAME = GENERIC_USERNAME_EMAIL
   val TWITTER_PASSWORD = GENERIC_PASSWORD
 
+  val GITHUB_USERNAME = GENERIC_USERNAME
+  val GITHUB_PASSWORD = GENERIC_PASSWORD
+
+  val AMAZON_USERNAME = GENERIC_USERNAME
+  val AMAZON_PASSWORD = GENERIC_PASSWORD
+
   val BAD_USERNAME_EMAIL = "shardtesting-bademail@gmail.com"
   val BAD_USERNAME = "shardtesting-badusername"
   val BAD_PASSWORD = "badpassword"
