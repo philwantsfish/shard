@@ -31,6 +31,9 @@ object TestCredentials {
   val BITBUCKET_USERNAME = GENERIC_USERNAME_EMAIL
   val BITBUCKET_PASSWORD = GENERIC_PASSWORD
 
+  val KIJIJI_USERNAME = GENERIC_USERNAME_EMAIL
+  val KIJIJI_PASSWORD = GENERIC_PASSWORD
+
   val BAD_USERNAME_EMAIL = "shardtesting-bademail@gmail.com"
   val BAD_USERNAME = "shardtesting-badusername"
   val BAD_PASSWORD = "badpassword"
