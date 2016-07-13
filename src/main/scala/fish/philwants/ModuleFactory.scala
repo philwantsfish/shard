@@ -8,6 +8,8 @@ object ModuleFactory {
     LinkedinModule,
     RedditModule,
     TwitterModule,
-    InstagramModule
+    InstagramModule,
+    GitHubModule,
+    BitBucketModule
   )
 }

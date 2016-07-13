@@ -28,6 +28,9 @@ object TestCredentials {
   val AMAZON_USERNAME = GENERIC_USERNAME
   val AMAZON_PASSWORD = GENERIC_PASSWORD
 
+  val BITBUCKET_USERNAME = GENERIC_USERNAME_EMAIL
+  val BITBUCKET_PASSWORD = GENERIC_PASSWORD
+
   val BAD_USERNAME_EMAIL = "shardtesting-bademail@gmail.com"
   val BAD_USERNAME = "shardtesting-badusername"
   val BAD_PASSWORD = "badpassword"
