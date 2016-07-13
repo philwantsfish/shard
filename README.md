@@ -35,7 +35,7 @@ Available modules:
         Instagram
 ```
 
-The master branch has modules for GitHub and BitBucket as well.
+The master branch has modules for GitHub, BitBucket, and Kijiji as well.
 
 ## Examples
 
