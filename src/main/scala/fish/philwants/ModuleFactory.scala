@@ -10,6 +10,7 @@ object ModuleFactory {
     TwitterModule,
     InstagramModule,
     GitHubModule,
-    BitBucketModule
+    BitBucketModule,
+    KijijiModule
   )
 }
