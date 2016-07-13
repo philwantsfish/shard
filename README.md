@@ -34,6 +34,9 @@ Available modules:
         Twitter
         Instagram
 ```
+
+The master branch has modules for GitHub and BitBucket as well.
+
 ## Examples
 
 Given a username and password shard will attempt to authenticate with multiple sites:
