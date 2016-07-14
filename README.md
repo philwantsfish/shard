@@ -9,9 +9,9 @@ A command line tool to detect shared passwords
 List options:
 
 ```
-$ java -jar shard-1.2.jar --help
-Shard 1.2
-Usage: java -jar shard-1.2.jar [options]
+$ java -jar shard-1.3.jar --help
+Shard 1.3
+Usage: java -jar shard-1.3.jar [options]
 
   -u, --username <value>  Username to test
   -p, --password <value>  Password to test
@@ -26,30 +26,34 @@ Usage: java -jar shard-1.2.jar [options]
 List available modules:
 
 ``` bash
-$ java -jar shard-1.2.jar -l
+$ java -jar shard-1.3.jar -l
 Available modules:
         Facebook
         LinkedIn
         Reddit
         Twitter
         Instagram
-```
+        GitHub
+        BitBucket
+        Kijiji
+        DigitalOcean
+        Vimeo
 
-The master branch has modules for GitHub, BitBucket, and Kijiji as well.
+```
 
 ## Examples
 
 Given a username and password shard will attempt to authenticate with multiple sites:
 
 ``` bash
-$ java -jar shard-1.2.jar -u username-here -p password-here
+$ java -jar shard-1.3.jar -u username-here -p password-here
 21:16:25.950 [+] Running in single credential mode
 21:16:30.302 [+] username-here:password-here - Reddit, Instagram
 ```
 To test multiple credentials supply a filename. By default this expects one credential per line in the format `"username":"password"`. Custom formats can be supplied with the `--format` option
 
 ```
-$ java -jar shard-1.2.jar -f /tmp/creds.txt
+$ java -jar shard-1.3.jar -f /tmp/creds.txt
 21:16:39.501 [+] Running in multi-credential mode
 21:16:39.516 [+] Parsed 2 credentials
 21:16:42.794 [+] username1:password1 - Reddit, Instagram
