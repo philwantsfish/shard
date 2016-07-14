@@ -5,11 +5,11 @@
 		organisation="default"
 		module="shard-build"
 		revision="0.1-SNAPSHOT"
-		extra-sbtVersion="0.13"
 		extra-scalaVersion="2.10"
+		extra-sbtVersion="0.13"
 		conf="pom"
 		confs="compile, runtime, test, provided, optional, compile-internal, runtime-internal, test-internal, plugin, sources, docs, pom, scala-tool"
-		date="20160706220904"/>
+		date="20160713194937"/>
 	<dependencies>
 	</dependencies>
 </ivy-report>

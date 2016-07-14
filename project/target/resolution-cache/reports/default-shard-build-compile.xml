@@ -5,19 +5,19 @@
 		organisation="default"
 		module="shard-build"
 		revision="0.1-SNAPSHOT"
-		extra-sbtVersion="0.13"
 		extra-scalaVersion="2.10"
+		extra-sbtVersion="0.13"
 		conf="compile"
 		confs="compile, runtime, test, provided, optional, compile-internal, runtime-internal, test-internal, plugin, sources, docs, pom, scala-tool"
-		date="20160706220904"/>
+		date="20160713194937"/>
 	<dependencies>
 		<module organisation="com.eed3si9n" name="sbt-assembly">
-			<revision name="0.12.0" status="release" pubdate="20141119163054" resolver="sbt-chain" artresolver="sbt-chain" extra-sbtVersion="0.13" extra-scalaVersion="2.10" downloaded="false" searched="false" default="false" conf="default(compile), compile" position="0">
+			<revision name="0.12.0" status="release" pubdate="20141119163054" resolver="sbt-plugin-releases" artresolver="sbt-plugin-releases" extra-scalaVersion="2.10" extra-sbtVersion="0.13" downloaded="true" searched="true" default="false" conf="compile, default(compile)" position="0">
 				<license name="MIT License" url="https://github.com/sbt/sbt-assembly/blob/master/LICENSE"/>
-				<metadata-artifact status="no" details="" size="1826" time="0" location="/Users/pokeefe/.ivy2/cache/scala_2.10/sbt_0.13/com.eed3si9n/sbt-assembly/ivy-0.12.0.xml" searched="false" origin-is-local="false" origin-location="https://repo.scala-sbt.org/scalasbt/sbt-plugin-releases/com.eed3si9n/sbt-assembly/scala_2.10/sbt_0.13/0.12.0/ivys/ivy.xml"/>
-				<caller organisation="default" name="shard-build" conf="compile" rev="0.12.0" rev-constraint-default="0.12.0" rev-constraint-dynamic="0.12.0" callerrev="0.1-SNAPSHOT" extra-sbtVersion="0.13" extra-scalaVersion="2.10"/>
+				<metadata-artifact status="successful" details="" size="1826" time="1062" location="/Users/okeefephil/.ivy2/cache/scala_2.10/sbt_0.13/com.eed3si9n/sbt-assembly/ivy-0.12.0.xml" searched="true" original-local-location="/Users/okeefephil/.ivy2/cache/scala_2.10/sbt_0.13/com.eed3si9n/sbt-assembly/ivy-0.12.0.xml.original" origin-is-local="false" origin-location="https://repo.scala-sbt.org/scalasbt/sbt-plugin-releases/com.eed3si9n/sbt-assembly/scala_2.10/sbt_0.13/0.12.0/ivys/ivy.xml"/>
+				<caller organisation="default" name="shard-build" conf="compile" rev="0.12.0" rev-constraint-default="0.12.0" rev-constraint-dynamic="0.12.0" callerrev="0.1-SNAPSHOT" extra-scalaVersion="2.10" extra-sbtVersion="0.13"/>
 				<artifacts>
-					<artifact name="sbt-assembly" type="jar" ext="jar" status="no" details="" size="161597" time="0" location="/Users/pokeefe/.ivy2/cache/scala_2.10/sbt_0.13/com.eed3si9n/sbt-assembly/jars/sbt-assembly-0.12.0.jar">
+					<artifact name="sbt-assembly" type="jar" ext="jar" status="successful" details="" size="161597" time="1495" location="/Users/okeefephil/.ivy2/cache/scala_2.10/sbt_0.13/com.eed3si9n/sbt-assembly/jars/sbt-assembly-0.12.0.jar">
 						<origin-location is-local="false" location="https://repo.scala-sbt.org/scalasbt/sbt-plugin-releases/com.eed3si9n/sbt-assembly/scala_2.10/sbt_0.13/0.12.0/jars/sbt-assembly.jar"/>
 					</artifact>
 				</artifacts>
