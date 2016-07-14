@@ -8,8 +8,9 @@ from modules.InstagramModule import instagram
 from modules.LinkedinModule import linkedin
 from modules.RedditModule import reddit
 from modules.TwitterModule import twitter
+from modules.LaposteModule import laposte
 
-modules = [facebook, instagram, linkedin, reddit, twitter]
+modules = [facebook, instagram, linkedin, reddit, twitter, laposte]
 
 def main():
 	username = ''
