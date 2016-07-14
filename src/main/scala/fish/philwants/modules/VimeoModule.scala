@@ -5,29 +5,34 @@ import org.jsoup.Connection.Response
 import scala.collection.JavaConversions._
 import org.jsoup.nodes.FormElement
 
-object KijijiModule extends AbstractModule {
-  val uri = "https://kijiji.com/"
-  val moduleName = "Kijiji"
+object VimeoModule extends AbstractModule {
+  val uri = "https://vimeo.com/"
+  val moduleName = "Vimeo"
 
+  /**
+   * The GitHub login process uses a hidden form parameter `authenticity_token` and requires
+   * a session cookie. Visit the login page, persist the cookies, submit the form with the hidden
+   * parameter
+   */
   def tryLogin(creds: Credentials): Boolean = {
-    val loginUri = "https://www.kijiji.ca/t-login.html"
+    val loginUri = "https://vimeo.com/login_in?modal=new"
     val resp = get(loginUri).execute()
 
     // Parse the form the response
     val form = resp
       .parse()
-      .select("form.special.track-form-flow")
-      .first()
+      .getElementById("login_form")
       .asInstanceOf[FormElement]
 
     // Update the form data to include username and password
-    val usernameKey = "emailOrNickname"
+    val usernameKey = "email"
     val passwordKey = "password"
     val formdata: Map[String, String] = form.formData().map { e => e.key() -> e.value() }.toMap
     val updatedFormData = formdata + (usernameKey -> creds.username) + (passwordKey -> creds.password)
 
     // Send login request
-    val loginResp = post(loginUri)
+    val loginUri2 = "https://vimeo.com/log_in?ssl=0&iframe=0&popup=0&player=0&product_id="
+    val loginResp = post(loginUri2)
       .header("Content-Type", "application/x-www-form-urlencoded")
       .data(updatedFormData)
       .cookies(resp.cookies())
@@ -35,6 +40,6 @@ object KijijiModule extends AbstractModule {
       .execute()
 
     // Check login result
-    loginResp.statusCode() == 302
+    loginResp.statusCode() == 200
   }
 }

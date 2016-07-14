@@ -11,6 +11,8 @@ object ModuleFactory {
     InstagramModule,
     GitHubModule,
     BitBucketModule,
-    KijijiModule
+    KijijiModule,
+    DigitalOceanModule,
+    VimeoModule
   )
 }

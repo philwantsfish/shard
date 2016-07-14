@@ -5,36 +5,37 @@ import org.jsoup.Connection.Response
 import scala.collection.JavaConversions._
 import org.jsoup.nodes.FormElement
 
-object KijijiModule extends AbstractModule {
-  val uri = "https://kijiji.com/"
-  val moduleName = "Kijiji"
+object DigitalOceanModule extends AbstractModule {
+  val uri = "https://digitialcoean.com/"
+  val moduleName = "DigitalOcean"
 
   def tryLogin(creds: Credentials): Boolean = {
-    val loginUri = "https://www.kijiji.ca/t-login.html"
+    val loginUri = "https://github.com/login"
     val resp = get(loginUri).execute()
 
     // Parse the form the response
     val form = resp
       .parse()
-      .select("form.special.track-form-flow")
+      .select("form")
       .first()
       .asInstanceOf[FormElement]
 
     // Update the form data to include username and password
-    val usernameKey = "emailOrNickname"
-    val passwordKey = "password"
+    val usernameKey = "user%5Bemail%5"
+    val passwordKey = "user%5Bemail%5"
     val formdata: Map[String, String] = form.formData().map { e => e.key() -> e.value() }.toMap
     val updatedFormData = formdata + (usernameKey -> creds.username) + (passwordKey -> creds.password)
 
     // Send login request
-    val loginResp = post(loginUri)
+    val loginUri2 = "https://digitalocean.com/session"
+    val loginResp = post(loginUri2)
       .header("Content-Type", "application/x-www-form-urlencoded")
       .data(updatedFormData)
       .cookies(resp.cookies())
       .followRedirects(false)
       .execute()
 
-    // Check login result
-    loginResp.statusCode() == 302
+    // Check the Location response header
+    !loginResp.header("Location").matches("https://cloud.digitalocean.com/droplets")
   }
 }

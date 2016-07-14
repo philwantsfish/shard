@@ -4,7 +4,7 @@ package fish.philwants
 object TestCredentials {
   // Test accounts
   val GENERIC_USERNAME_EMAIL = ???
-  val GENERIC_USERNAME = ???
+  val GENERIC_USERNAME =  ???
   val GENERIC_PASSWORD = ???
 
   val FACEBOOK_USERNAME = GENERIC_USERNAME_EMAIL
@@ -33,6 +33,12 @@ object TestCredentials {
 
   val KIJIJI_USERNAME = GENERIC_USERNAME_EMAIL
   val KIJIJI_PASSWORD = GENERIC_PASSWORD
+
+  val DIGITAL_OCEAN_USERNAME = GENERIC_USERNAME_EMAIL
+  val DIGITAL_OCEAN_PASSWORD = GENERIC_PASSWORD
+
+  val VIMEO_USERNAME = GENERIC_USERNAME_EMAIL
+  val VIMEO_PASSWORD = GENERIC_PASSWORD
 
   val BAD_USERNAME_EMAIL = "shardtesting-bademail@gmail.com"
   val BAD_USERNAME = "shardtesting-badusername"
