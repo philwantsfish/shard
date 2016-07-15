@@ -15,25 +15,27 @@ object Runner extends LazyLogging {
   val defaultCredentialRegex = """"((?:\"|[^"])+)":"((?:\"|[^"])+)""""
   val versionNumber = "1.2"
 
-  def singleCredentialMode(username: String, password: String): Unit = {
+  def singleCredentialMode(username: String, password: String, moduleFilter: Seq[String]): Unit = {
     logger.info("Running in single credential mode")
     val creds = Credentials(username, password)
-    printResults(tryCredential(creds))
+    printResults(tryCredential(creds, moduleFilter))
   }
 
-  def multiCredentialMode(path: String, format: String): Unit = {
+  def multiCredentialMode(path: String, format: String, moduleFilter: Seq[String]): Unit = {
     logger.info("Running in multi-credential mode")
     val credentialRegex = if (format.nonEmpty) format else defaultCredentialRegex
     val creds = parseCredsFromFile(Source.fromFile(path), credentialRegex.r)
     logger.info(s"Parsed ${creds.size} credentials")
 
     creds
-      .map { c => tryCredential(c) }
+      .map { c => tryCredential(c, moduleFilter) }
       .foreach { vc => printResults(vc) }
   }
 
-  def tryCredential(creds: Credentials): ValidCredentials = {
-    ValidCredentials(creds, ModuleFactory.modules.filter { m => m.tryCredential(creds) })
+  def tryCredential(creds: Credentials, moduleFilter: Seq[String]): ValidCredentials = {
+    val modules = ModuleFactory.modules.filter { m => moduleFilter.contains(m.moduleName) }
+    logger.info(s"Running ${modules.size} modules")
+    ValidCredentials(creds, modules.filter { m => m.tryCredential(creds) })
   }
 
   def parseCredsFromFile(path: BufferedSource, credentialRegex: Regex): Stream[Credentials] = {
@@ -62,6 +64,7 @@ object Runner extends LazyLogging {
                      password: String = "",
                      file: String = "",
                      format: String = "",
+                     modules: String = "",
                      version: Boolean = false
                      )
 
@@ -88,9 +91,13 @@ object Runner extends LazyLogging {
         .action( (_, c) => c.copy(list = true))
         .text("List available modules")
 
-      opt[Boolean]('v', "version")
-        .action( (_,c) => c.copy(version = true))
+      opt[Unit]('v', "version")
+        .action( (_, c) => c.copy(version = true))
         .text("Print the version")
+
+      opt[String]("modules")
+          .action( (v, c) => c.copy(modules = v))
+            .text("Only run specific modules. A comma separated list")
 
       help("help")
         .text("prints this usage text")
@@ -98,6 +105,8 @@ object Runner extends LazyLogging {
 
     parser.parse(args, Config()) match {
       case Some(config) =>
+        val moduleFilter: Seq[String] = if(config.modules.nonEmpty) config.modules.split(',') else Seq()
+
         // Print the list of modules if asked
         if(config.version) {
           println(s"Shard version $versionNumber")
@@ -107,10 +116,10 @@ object Runner extends LazyLogging {
           modules.foreach { m => println(s"\t${m.moduleName}")}
         } else if(config.file.nonEmpty) {
           // User has provided a file of credentials
-          Runner.multiCredentialMode(config.file, config.format)
+          Runner.multiCredentialMode(config.file, config.format, moduleFilter)
         } else if(config.username.nonEmpty && config.password.nonEmpty) {
           // User has provided a single username and password combination
-          Runner.singleCredentialMode(config.username, config.password)
+          Runner.singleCredentialMode(config.username, config.password, moduleFilter)
         } else {
           println("Must provide a file of credentials (-f) or a single credential using -u and -p.")
         }

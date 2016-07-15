@@ -16,4 +16,10 @@ class DigitalOceanModuleTest extends FlatSpec with Matchers {
     val mod = GitHubModule
     mod.tryLogin(creds) shouldBe false
   }
+
+  it should "detect a failed login with a bad username" in {
+    val creds = Credentials(BAD_USERNAME, BAD_PASSWORD)
+    val mod = GitHubModule
+    mod.tryLogin(creds) shouldBe false
+  }
 }

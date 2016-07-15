@@ -1,16 +1,18 @@
 package fish.philwants.modules
 
+import com.typesafe.scalalogging.LazyLogging
 import fish.philwants.Credentials
 import org.jsoup.Connection.Response
+
 import scala.collection.JavaConversions._
 import org.jsoup.nodes.FormElement
 
-object DigitalOceanModule extends AbstractModule {
-  val uri = "https://digitialcoean.com/"
+object DigitalOceanModule extends AbstractModule with LazyLogging {
+  val uri = "https://digitalocean.com"
   val moduleName = "DigitalOcean"
 
   def tryLogin(creds: Credentials): Boolean = {
-    val loginUri = "https://github.com/login"
+    val loginUri = "https://cloud.digitalocean.com/login"
     val resp = get(loginUri).execute()
 
     // Parse the form the response
@@ -21,13 +23,13 @@ object DigitalOceanModule extends AbstractModule {
       .asInstanceOf[FormElement]
 
     // Update the form data to include username and password
-    val usernameKey = "user%5Bemail%5"
-    val passwordKey = "user%5Bemail%5"
+    val usernameKey = "user[email]"
+    val passwordKey = "user[password]"
     val formdata: Map[String, String] = form.formData().map { e => e.key() -> e.value() }.toMap
     val updatedFormData = formdata + (usernameKey -> creds.username) + (passwordKey -> creds.password)
 
     // Send login request
-    val loginUri2 = "https://digitalocean.com/session"
+    val loginUri2 = "https://cloud.digitalocean.com/sessions"
     val loginResp = post(loginUri2)
       .header("Content-Type", "application/x-www-form-urlencoded")
       .data(updatedFormData)
@@ -36,6 +38,7 @@ object DigitalOceanModule extends AbstractModule {
       .execute()
 
     // Check the Location response header
-    !loginResp.header("Location").matches("https://cloud.digitalocean.com/droplets")
+    val location = loginResp.header("Location")
+    location.matches("https://cloud.digitalocean.com/droplets")
   }
 }
