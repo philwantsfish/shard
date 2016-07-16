@@ -5,7 +5,7 @@
 
 1. Install Python 2.7+ or Python 3.5+
 2. Download this folder
-3. Install dependencies with `sudo pip -r requirements.txt`
+3. Install dependencies with `sudo pip install -r requirements.txt`
 4. Use with `python shard.py -l` for checking loaded modules
 5. Use with `python shard.py -u <USERNAME> -p <PASSWORD>` for a password check.
 
