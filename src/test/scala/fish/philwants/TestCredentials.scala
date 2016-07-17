@@ -44,6 +44,9 @@ object TestCredentials {
   val LAPOSTE_USERNAME = "shard.shardtesting@laposte.net"
   val LAPOSTE_PASSWORD = GENERIC_PASSWORD_WITH_CAPITAL
 
+  val DAILYMOTION_USERNAME = GENERIC_USERNAME_EMAIL
+  val DAILYMOTION_PASSWORD = GENERIC_PASSWORD_WITH_CAPITAL
+
   val BAD_USERNAME_EMAIL = "shardtesting-bademail@gmail.com"
   val BAD_USERNAME = "shardtesting-badusername"
   val BAD_PASSWORD = "badpassword"

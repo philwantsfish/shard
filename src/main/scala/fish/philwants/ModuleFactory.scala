@@ -14,6 +14,7 @@ object ModuleFactory {
     KijijiModule,
     DigitalOceanModule,
     VimeoModule,
-    LaposteModule
+    LaposteModule,
+    DailymotionModule
   )
 }
