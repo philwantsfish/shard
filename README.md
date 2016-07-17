@@ -44,6 +44,8 @@ Available modules:
 
 ```
 
+The master branch also has a module for Dailymotion.
+
 ## Examples
 
 Given a username and password shard will attempt to authenticate with multiple sites:
