@@ -6,6 +6,7 @@ object TestCredentials {
   val GENERIC_USERNAME_EMAIL = ???
   val GENERIC_USERNAME =  ???
   val GENERIC_PASSWORD = ???
+  val GENERIC_PASSWORD_WITH_CAPITAL = ???
 
   val FACEBOOK_USERNAME = GENERIC_USERNAME_EMAIL
   val FACEBOOK_PASSWORD = GENERIC_PASSWORD
@@ -39,6 +40,9 @@ object TestCredentials {
 
   val VIMEO_USERNAME = GENERIC_USERNAME_EMAIL
   val VIMEO_PASSWORD = GENERIC_PASSWORD
+
+  val LAPOSTE_USERNAME = "shard.shardtesting@laposte.net"
+  val LAPOSTE_PASSWORD = GENERIC_PASSWORD_WITH_CAPITAL
 
   val BAD_USERNAME_EMAIL = "shardtesting-bademail@gmail.com"
   val BAD_USERNAME = "shardtesting-badusername"

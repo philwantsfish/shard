@@ -9,24 +9,26 @@ A command line tool to detect shared passwords
 List options:
 
 ```
-$ java -jar shard-1.3.jar --help
-Shard 1.3
-Usage: java -jar shard-1.3.jar [options]
+$ java -jar shard.jar --help
+Shard 1.4
+Usage: java -jar shard-1.4.jar [options]
 
   -u, --username <value>  Username to test
   -p, --password <value>  Password to test
   -f, --file <value>      File containing a set of credentials
   --format <value>        The format of the credentials. Must be a regular expression with 2 capture groups. The first capture group for the username and the second capture group for the password. Defaults to a regex that will match:
-	"username":"password"
+        "username":"password"
   -l, --list              List available modules
-  -v, --version <value>   Print the version
+  -v, --version           Print the version
+  --modules <value>       Only run specific modules. A comma separated list
   --help                  prints this usage text
+
 ```
 
 List available modules:
 
 ``` bash
-$ java -jar shard-1.3.jar -l
+$ java -jar shard.jar -l
 Available modules:
         Facebook
         LinkedIn
@@ -38,6 +40,7 @@ Available modules:
         Kijiji
         DigitalOcean
         Vimeo
+        Laposte
 
 ```
 
@@ -46,14 +49,14 @@ Available modules:
 Given a username and password shard will attempt to authenticate with multiple sites:
 
 ``` bash
-$ java -jar shard-1.3.jar -u username-here -p password-here
+$ java -jar shard-1.4.jar -u username-here -p password-here
 21:16:25.950 [+] Running in single credential mode
 21:16:30.302 [+] username-here:password-here - Reddit, Instagram
 ```
 To test multiple credentials supply a filename. By default this expects one credential per line in the format `"username":"password"`. Custom formats can be supplied with the `--format` option
 
 ```
-$ java -jar shard-1.3.jar -f /tmp/creds.txt
+$ java -jar shard.jar -f /tmp/creds.txt
 21:16:39.501 [+] Running in multi-credential mode
 21:16:39.516 [+] Parsed 2 credentials
 21:16:42.794 [+] username1:password1 - Reddit, Instagram
@@ -84,9 +87,11 @@ Dependencies:
 - JSoup is used for HTTP communication and HTML parsing 
 - spray-json is used for handling json
 
+If Scala is not your thing check out the secondary_implementations, these are rewrites of shard in other languages. If you add a module to one of these implementations I will rewrite in Scala and add it to the main project as well.
+
 ## Bugs, Requests, and Feedback
 
-Contact me or use this GitHub project
+Contact me, join the [Gitter](https://gitter.im/philwantsfish/shard) room, or use this GitHub project
 
 
 

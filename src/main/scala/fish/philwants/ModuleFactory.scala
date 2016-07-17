@@ -13,6 +13,7 @@ object ModuleFactory {
     BitBucketModule,
     KijijiModule,
     DigitalOceanModule,
-    VimeoModule
+    VimeoModule,
+    LaposteModule
   )
 }

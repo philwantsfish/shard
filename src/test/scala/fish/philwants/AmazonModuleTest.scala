@@ -5,7 +5,7 @@ import org.scalatest.{FlatSpec, Matchers}
 import TestCredentials._
 
 class AmazonModuleTest extends FlatSpec with Matchers {
-  "Amazon module" should "detect a successful login" in {
+  "Amazon module" should "detect a successful login" ignore {
     val creds = Credentials(AMAZON_USERNAME, AMAZON_PASSWORD)
     val mod = AmazonModule
     mod.tryLogin(creds) shouldBe true

@@ -13,7 +13,7 @@ case class ValidCredentials(creds: Credentials, modules: Seq[AbstractModule])
 
 object Runner extends LazyLogging {
   val defaultCredentialRegex = """"((?:\"|[^"])+)":"((?:\"|[^"])+)""""
-  val versionNumber = "1.2"
+  val versionNumber = "1.4"
 
   def singleCredentialMode(username: String, password: String, moduleFilter: Seq[String]): Unit = {
     logger.info("Running in single credential mode")
