@@ -1,0 +1,1 @@
+gem 'rest-client'
