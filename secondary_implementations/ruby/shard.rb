@@ -9,6 +9,7 @@ require 'optparse'
 
 @username = ""
 @password = ""
+@file = nil
 
 OptionParser.new do |opts|
   opts.banner = "Usage: shard.rb [options]"
@@ -27,6 +28,10 @@ OptionParser.new do |opts|
   opts.on("-pPassword", "Password to try") do |v|
     @password = v
   end
+
+  opts.on("-fFile", "File") do |v|
+    @file = v
+  end
 end.parse!
 
 if @username && @username != "" && @password && @password != ""
@@ -37,6 +42,32 @@ if @username && @username != "" && @password && @password != ""
     else
     	puts "\t#{targ.class.name}: INVALID_CREDENTIALS"
     end
-   end
+  end
+elsif @username && @username != "" && @file
+  puts "Results:"
+  File.readlines(@file).each do |line|
+    @password = line.gsub("\n","")
+
+    puts "Trying: " + @password
+    @targets.each do |targ|
+      if targ.try_login(@username, @password)
+        puts "\t#{targ.class.name}: VALID_CREDENTIALS (" + @password + ")"
+      end
+    end
+  end
+elsif @file
+  puts "Results:"
+  File.readlines(@file).each do |line|
+    @split = line.split(":")
+    @username = @split[0].gsub!('"', '')
+    @password = @split[1].gsub!('"', '')
+
+    puts "Trying: " + @username + " " + @password
+    @targets.each do |targ|
+      if targ.try_login(@username, @password)
+        puts "\t#{targ.class.name}: VALID_CREDENTIALS (" + @username + " => " + @password + ")"
+      end
+    end
+  end
 end
 
