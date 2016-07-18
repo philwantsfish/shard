@@ -105,7 +105,7 @@ object Runner extends LazyLogging {
 
     parser.parse(args, Config()) match {
       case Some(config) =>
-        val moduleFilter: Seq[String] = if(config.modules.nonEmpty) config.modules.split(',') else Seq()
+        val moduleFilter: Seq[String] = if(config.modules.nonEmpty) config.modules.split(',') else ModuleFactory.modules.map(_.moduleName)
 
         // Print the list of modules if asked
         if(config.version) {
