@@ -4,6 +4,7 @@ import fish.philwants.Credentials
 import org.jsoup.Connection.Response
 import scala.collection.JavaConversions._
 import org.jsoup.nodes.FormElement
+import fish.philwants.JsoupImplicits._
 
 object KijijiModule extends AbstractModule {
   val uri = "https://kijiji.com/"
@@ -13,23 +14,15 @@ object KijijiModule extends AbstractModule {
     val loginUri = "https://www.kijiji.ca/t-login.html"
     val resp = get(loginUri).execute()
 
-    // Parse the form the response
-    val form = resp
-      .parse()
-      .select("form.special.track-form-flow")
-      .first()
-      .asInstanceOf[FormElement]
+    // Get the form and update it with credentials
+    val form = resp.selectForm("form.special.track-form-flow")
+      .update("emailOrNickname", creds.username)
+      .update("password", creds.password)
 
-    // Update the form data to include username and password
-    val usernameKey = "emailOrNickname"
-    val passwordKey = "password"
-    val formdata: Map[String, String] = form.formData().map { e => e.key() -> e.value() }.toMap
-    val updatedFormData = formdata + (usernameKey -> creds.username) + (passwordKey -> creds.password)
-
-    // Send login request
-    val loginResp = post(loginUri)
+    // Try to login
+    val loginResp = form
+      .submit()
       .header("Content-Type", "application/x-www-form-urlencoded")
-      .data(updatedFormData)
       .cookies(resp.cookies())
       .followRedirects(false)
       .execute()

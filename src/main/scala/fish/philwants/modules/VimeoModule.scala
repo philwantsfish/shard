@@ -1,9 +1,7 @@
 package fish.philwants.modules
 
 import fish.philwants.Credentials
-import org.jsoup.Connection.Response
-import scala.collection.JavaConversions._
-import org.jsoup.nodes.FormElement
+import fish.philwants.JsoupImplicits._
 
 object VimeoModule extends AbstractModule {
   val uri = "https://vimeo.com/"
@@ -18,23 +16,15 @@ object VimeoModule extends AbstractModule {
     val loginUri = "https://vimeo.com/login_in?modal=new"
     val resp = get(loginUri).execute()
 
-    // Parse the form the response
-    val form = resp
-      .parse()
-      .getElementById("login_form")
-      .asInstanceOf[FormElement]
+    // Get the form and update it with credentials
+    val form = resp.getFormById("login_form")
+        .update("email", creds.username)
+        .update("password", creds.password)
 
-    // Update the form data to include username and password
-    val usernameKey = "email"
-    val passwordKey = "password"
-    val formdata: Map[String, String] = form.formData().map { e => e.key() -> e.value() }.toMap
-    val updatedFormData = formdata + (usernameKey -> creds.username) + (passwordKey -> creds.password)
-
-    // Send login request
-    val loginUri2 = "https://vimeo.com/log_in?ssl=0&iframe=0&popup=0&player=0&product_id="
-    val loginResp = post(loginUri2)
+    // Try to login
+    val loginResp = form
+      .submit()
       .header("Content-Type", "application/x-www-form-urlencoded")
-      .data(updatedFormData)
       .cookies(resp.cookies())
       .followRedirects(false)
       .execute()

@@ -5,6 +5,7 @@ import org.jsoup.Connection.Response
 import org.jsoup.{Connection, Jsoup}
 import scala.collection.JavaConversions._
 import org.jsoup.nodes.FormElement
+import fish.philwants.JsoupImplicits._
 
 object TwitterModule extends AbstractModule {
   val uri = "https://twitter.com/"
@@ -18,28 +19,16 @@ object TwitterModule extends AbstractModule {
   def tryLogin(creds: Credentials): Boolean = {
     val resp = get(uri).execute()
 
-    // Parse the form the response
-    val form: FormElement = resp
-      .parse()
-      .select("form.LoginForm.js-front-signin")
-      .first()
-      .asInstanceOf[FormElement]
+    // Get the form and update it with credentials
+    val form = resp.selectForm("form.LoginForm.js-front-signin")
+      .update("session[username_or_email]", creds.username)
+      .update("session[password]", creds.password)
 
-    // Update the form data to include username and password
-    val usernameKey = "session[username_or_email]"
-    val passwordKey = "session[password]"
-    val formdata: Map[String, String] = form
-      .formData()
-      .map { e => e.key() -> e.value() }
-      .toMap
-    val updatedFormData = formdata + (usernameKey -> creds.username) + (passwordKey -> creds.password)
-
-    // Send login request
-    val loginUri = "https://twitter.com/sessions"
-    val loginResp = post(loginUri)
-      .header("Content-Type", "application/x-www-form-urlencoded")
-      .data(updatedFormData)
+    // Try to login
+    val loginResp = form
+      .submit()
       .cookies(resp.cookies())
+      .header("Content-Type", "application/x-www-form-urlencoded")
       .followRedirects(false)
       .execute()
 

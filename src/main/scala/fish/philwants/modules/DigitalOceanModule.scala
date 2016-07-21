@@ -3,6 +3,7 @@ package fish.philwants.modules
 import com.typesafe.scalalogging.LazyLogging
 import fish.philwants.Credentials
 import org.jsoup.Connection.Response
+import fish.philwants.JsoupImplicits._
 
 import scala.collection.JavaConversions._
 import org.jsoup.nodes.FormElement
@@ -15,24 +16,15 @@ object DigitalOceanModule extends AbstractModule with LazyLogging {
     val loginUri = "https://cloud.digitalocean.com/login"
     val resp = get(loginUri).execute()
 
-    // Parse the form the response
-    val form = resp
-      .parse()
-      .select("form")
-      .first()
-      .asInstanceOf[FormElement]
-
-    // Update the form data to include username and password
-    val usernameKey = "user[email]"
-    val passwordKey = "user[password]"
-    val formdata: Map[String, String] = form.formData().map { e => e.key() -> e.value() }.toMap
-    val updatedFormData = formdata + (usernameKey -> creds.username) + (passwordKey -> creds.password)
+    // Get the form and update it with credentials
+    val form = resp.firstForm
+      .update("user[email]", creds.username)
+      .update("user[password]", creds.password)
 
     // Send login request
-    val loginUri2 = "https://cloud.digitalocean.com/sessions"
-    val loginResp = post(loginUri2)
+    val loginResp = form
+      .submit()
       .header("Content-Type", "application/x-www-form-urlencoded")
-      .data(updatedFormData)
       .cookies(resp.cookies())
       .followRedirects(false)
       .execute()

@@ -19,7 +19,6 @@ object FacebookModule extends AbstractModule {
 
     // Send login request
     val loginUri = "https://www.facebook.com/login.php"
-
     val loginResp = post(loginUri)
       .data(params)
       .cookies(resp.cookies())

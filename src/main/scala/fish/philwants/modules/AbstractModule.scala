@@ -1,7 +1,9 @@
 package fish.philwants.modules
 
 import fish.philwants.Credentials
+import org.jsoup.nodes.FormElement
 import org.jsoup.{Connection, Jsoup}
+
 import scala.concurrent.duration._
 import scala.util.{Failure, Success, Try}
 
@@ -23,6 +25,8 @@ trait AbstractModule {
     val randIndex = scala.util.Random.nextInt(userAgentHeaders.size)
     userAgentHeaders(randIndex)
   }
+
+
 
   def post(uri: String): Connection = {
     Jsoup

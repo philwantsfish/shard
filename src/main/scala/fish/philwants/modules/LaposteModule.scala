@@ -3,6 +3,7 @@ package fish.philwants.modules
 import fish.philwants.Credentials
 import scala.collection.JavaConversions._
 import org.jsoup.nodes.FormElement
+import fish.philwants.JsoupImplicits._
 
 object LaposteModule extends AbstractModule {
   val uri = "https://laposte.net/"
@@ -14,27 +15,15 @@ object LaposteModule extends AbstractModule {
       .validateTLSCertificates(false)
       .execute()
 
-    // Parse the form the response
-    val form: FormElement = resp
-      .parse()
-      .select("form")
-      .first()
-      .asInstanceOf[FormElement]
+    // Get the form and update it with credentials
+    val form = resp.firstForm
+      .update("login", creds.username)
+      .update("password", creds.password)
 
-    // Update the form data to include username and password
-    val usernameKey = "login"
-    val passwordKey = "password"
-    val formdata: Map[String, String] = form
-      .formData()
-      .map { e => e.key() -> e.value() }
-      .toMap
-    val updatedFormData = formdata + (usernameKey -> creds.username) + (passwordKey -> creds.password)
-
-    // Send login request
-    val loginUri2 = "https://compte.laposte.net/login.do"
-    val loginResp = post(loginUri2)
+    // Try to login
+    val loginResp = form
+      .submit()
       .header("Content-Type", "application/x-www-form-urlencoded")
-      .data(updatedFormData)
       .cookies(resp.cookies())
       .followRedirects(false)
       .validateTLSCertificates(false)
