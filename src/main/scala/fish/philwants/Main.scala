@@ -1,9 +1,8 @@
 package fish.philwants
 
 import com.typesafe.scalalogging.LazyLogging
+import fish.philwants.modes._
 import fish.philwants.modules._
-import scala.io.{BufferedSource, Source}
-import scala.util.matching.Regex
 
 case class Credentials(username: String, password: String) {
   override def toString: String = { s"$username:$password" }
@@ -11,50 +10,13 @@ case class Credentials(username: String, password: String) {
 
 case class ValidCredentials(creds: Credentials, modules: Seq[AbstractModule])
 
-object Runner extends LazyLogging {
+/**
+  * This is the main entry point for shard. This object is responsible for parsing the input parameters, selecting
+  * an execution mode, and running it.
+  */
+object Main extends LazyLogging with ModeHelper {
   val defaultCredentialRegex = """"((?:\"|[^"])+)":"((?:\"|[^"])+)""""
-  val versionNumber = "1.4"
-
-  def singleCredentialMode(username: String, password: String, moduleFilter: Seq[String]): Unit = {
-    logger.info("Running in single credential mode")
-    val creds = Credentials(username, password)
-    printResults(tryCredential(creds, moduleFilter))
-  }
-
-  def multiCredentialMode(path: String, format: String, moduleFilter: Seq[String]): Unit = {
-    logger.info("Running in multi-credential mode")
-    val credentialRegex = if (format.nonEmpty) format else defaultCredentialRegex
-    val creds = parseCredsFromFile(Source.fromFile(path), credentialRegex.r)
-    logger.info(s"Parsed ${creds.size} credentials")
-
-    creds
-      .map { c => tryCredential(c, moduleFilter) }
-      .foreach { vc => printResults(vc) }
-  }
-
-  def tryCredential(creds: Credentials, moduleFilter: Seq[String]): ValidCredentials = {
-    val modules = ModuleFactory.modules.filter { m => moduleFilter.contains(m.moduleName) }
-    logger.info(s"Running ${modules.size} modules")
-    ValidCredentials(creds, modules.filter { m => m.tryCredential(creds) })
-  }
-
-  def parseCredsFromFile(path: BufferedSource, credentialRegex: Regex): Stream[Credentials] = {
-    val credentialLines = path.getLines().toStream
-
-    credentialLines.flatMap {
-      case credentialRegex(username, password) => Some(Credentials(username, password))
-      case _ => None
-    }
-  }
-
-  def printResults(vc: ValidCredentials): Unit = {
-    if (vc.modules.size <= 0) {
-      logger.info(s"${vc.creds} - No results")
-    } else {
-      val successfulModuleNames = vc.modules.map { m => m.moduleName }.mkString(", ")
-      logger.info(s"${vc.creds} - $successfulModuleNames")
-    }
-  }
+  val versionNumber = "1.5"
 
   def main(args: Array[String]): Unit = {
     case class Config(
@@ -106,20 +68,23 @@ object Runner extends LazyLogging {
     parser.parse(args, Config()) match {
       case Some(config) =>
         val moduleFilter: Seq[String] = if(config.modules.nonEmpty) config.modules.split(',') else ModuleFactory.modules.map(_.moduleName)
+        val modules = ModuleFactory.modules.filter { m => moduleFilter.contains(m.moduleName) }
 
-        // Print the list of modules if asked
+        // Check the flags and execute the appropriate action
         if(config.version) {
           println(s"Shard version $versionNumber")
         } else if(config.list) {
-          val modules = ModuleFactory.modules
           println("Available modules:")
-          modules.foreach { m => println(s"\t${m.moduleName}")}
-        } else if(config.file.nonEmpty) {
-          // User has provided a file of credentials
-          Runner.multiCredentialMode(config.file, config.format, moduleFilter)
+          ModuleFactory.modules.foreach { m => println(s"\t${m.moduleName}")}
         } else if(config.username.nonEmpty && config.password.nonEmpty) {
-          // User has provided a single username and password combination
-          Runner.singleCredentialMode(config.username, config.password, moduleFilter)
+          // if -u and -p flags are passed run single-user single-password mode
+          SingleUserSinglePasswordMode.collect(Credentials(config.username, config.password), modules)
+        } else if (config.username.nonEmpty && config.file.nonEmpty) {
+          // if -u and -f are passed run single-user multi-password mode
+          SingleUserMultiPasswordMode.collect(config.username, config.file, modules)
+        } else if(config.file.nonEmpty) {
+          // if only the -f flag is passed run multi-user multi-password mode
+          MultiUserMultiPasswordMode.collect(config.file, config.format, modules)
         } else {
           println("Must provide a file of credentials (-f) or a single credential using -u and -p.")
         }

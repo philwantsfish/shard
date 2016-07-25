@@ -17,6 +17,8 @@ libraryDependencies ++= Seq(
 
 resolvers += Resolver.sonatypeRepo("public")
 
-mainClass in Compile := Some("fish.philwants.Runner")
+mainClass in Compile := Some("fish.philwants.Main")
 
 test in assembly := {}
+
+assemblyJarName in assembly := "shard-1.5.jar"
