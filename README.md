@@ -89,7 +89,7 @@ The AbstractModule has one abstract method:
   def tryLogin(creds: Credentials): Boolean
 ```
 
-This method takes a Credentials object and returns a boolean indicating a successful login. I recommend using the TwitterModule as an template.
+This method takes a Credentials object and returns a boolean indicating a successful login. I recommend using the TwitterModule as an template. For an indepth explanation of adding a new module see the [example on the wiki](https://github.com/philwantsfish/shard/wiki/Logging-into-Twitter-example)
 
 Dependencies:
 - JSoup is used for HTTP communication and HTML parsing 
