@@ -2,11 +2,13 @@ package fish.philwants
 
 import org.jsoup.Connection
 import org.jsoup.nodes.FormElement
-
 import scala.language.implicitConversions
 
-
-object JsoupImplicits {
+/**
+  * This trait contains pimps for the Jsoup library. Specifically the Connection.Response and FormElement objects.
+  * This trait should be mixed with a package object to avoid import tax
+  */
+trait JsoupImplicits {
   implicit def connectionResponseImplicit(resp: Connection.Response): ConnectionResponseImplicit =
     new ConnectionResponseImplicit(resp)
 

@@ -2,7 +2,6 @@ package fish.philwants.modules
 
 import fish.philwants.Credentials
 import org.jsoup.Connection.Response
-import org.jsoup.{Connection, Jsoup}
 import scala.collection.JavaConversions._
 import spray.json._
 

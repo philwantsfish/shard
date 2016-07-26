@@ -2,21 +2,25 @@ package fish.philwants
 
 import com.typesafe.scalalogging.LazyLogging
 import fish.philwants.modes._
-import fish.philwants.modules._
-
-case class Credentials(username: String, password: String) {
-  override def toString: String = { s"$username:$password" }
-}
-
-case class ValidCredentials(creds: Credentials, modules: Seq[AbstractModule])
 
 /**
   * This is the main entry point for shard. This object is responsible for parsing the input parameters, selecting
   * an execution mode, and running it.
   */
-object Main extends LazyLogging with ModeHelper {
+object Main extends LazyLogging {
   val defaultCredentialRegex = """"((?:\"|[^"])+)":"((?:\"|[^"])+)""""
   val versionNumber = "1.5"
+
+  val modeExplanation =
+    s"""
+      |Shard ($versionNumber) can run in 3 modes:
+      |
+      |1) Single user single password          - Use -u and -p
+      |2) Single user multiple passwords       - Use -u and -f
+      |3) Multiple users and multple passwords - Use -f only
+      |
+      |For more detailed usage examples see the wiki.
+    """.stripMargin
 
   def main(args: Array[String]): Unit = {
     case class Config(
@@ -31,7 +35,7 @@ object Main extends LazyLogging with ModeHelper {
                      )
 
     val parser = new scopt.OptionParser[Config](s"java -jar shard-$versionNumber.jar") {
-      head("Shard", versionNumber)
+      head(modeExplanation)
 
       opt[String]('u', "username")
         .action((v,c) => c.copy(username = v))
@@ -43,7 +47,7 @@ object Main extends LazyLogging with ModeHelper {
 
       opt[String]('f', "file")
         .action((v,c) => c.copy(file = v))
-        .text("File containing a set of credentials")
+        .text("A path to a file containing a set of credentials or passwords")
 
       opt[String]("format")
       .action((v,c) => c.copy(format = v))
@@ -62,7 +66,7 @@ object Main extends LazyLogging with ModeHelper {
             .text("Only run specific modules. A comma separated list")
 
       help("help")
-        .text("prints this usage text")
+        .text("Prints this usage text")
     }
 
     parser.parse(args, Config()) match {
@@ -72,13 +76,14 @@ object Main extends LazyLogging with ModeHelper {
 
         // Check the flags and execute the appropriate action
         if(config.version) {
-          println(s"Shard version $versionNumber")
+          logger.info(s"Shard version $versionNumber")
         } else if(config.list) {
-          println("Available modules:")
-          ModuleFactory.modules.foreach { m => println(s"\t${m.moduleName}")}
+          logger.info("Available modules:")
+          ModuleFactory.modules.foreach { m => logger.info(s"\t${m.moduleName}")}
         } else if(config.username.nonEmpty && config.password.nonEmpty) {
           // if -u and -p flags are passed run single-user single-password mode
-          SingleUserSinglePasswordMode.collect(Credentials(config.username, config.password), modules)
+          val creds = Credentials(config.username, config.password)
+          SingleUserSinglePasswordMode.collect(creds, modules)
         } else if (config.username.nonEmpty && config.file.nonEmpty) {
           // if -u and -f are passed run single-user multi-password mode
           SingleUserMultiPasswordMode.collect(config.username, config.file, modules)
@@ -86,10 +91,11 @@ object Main extends LazyLogging with ModeHelper {
           // if only the -f flag is passed run multi-user multi-password mode
           MultiUserMultiPasswordMode.collect(config.file, config.format, modules)
         } else {
-          println("Must provide a file of credentials (-f) or a single credential using -u and -p.")
+          logger.info("Must provide a file of credentials (-f) or a single credential using -u and -p.")
         }
       case None =>
-        println("Bad arguments")
+        logger.info("Bad arguments, must select a mode")
+        logger.info("Use --help for more information or see the wiki")
     }
   }
 }

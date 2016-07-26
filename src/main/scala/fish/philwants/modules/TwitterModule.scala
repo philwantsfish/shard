@@ -2,10 +2,6 @@ package fish.philwants.modules
 
 import fish.philwants.Credentials
 import org.jsoup.Connection.Response
-import org.jsoup.{Connection, Jsoup}
-import scala.collection.JavaConversions._
-import org.jsoup.nodes.FormElement
-import fish.philwants.JsoupImplicits._
 
 object TwitterModule extends AbstractModule {
   val uri = "https://twitter.com/"

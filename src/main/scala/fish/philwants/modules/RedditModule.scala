@@ -1,7 +1,6 @@
 package fish.philwants.modules
 
 import fish.philwants.Credentials
-import org.jsoup.{Connection, Jsoup}
 import collection.JavaConverters._
 
 object RedditModule extends AbstractModule {

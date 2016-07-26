@@ -1,8 +1,6 @@
 package fish.philwants.modules
 
 import fish.philwants.Credentials
-import fish.philwants.JsoupImplicits._
-
 
 object LinkedinModule extends AbstractModule {
   override val moduleName: String = "LinkedIn"

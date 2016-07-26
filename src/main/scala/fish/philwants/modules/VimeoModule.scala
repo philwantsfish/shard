@@ -1,7 +1,6 @@
 package fish.philwants.modules
 
 import fish.philwants.Credentials
-import fish.philwants.JsoupImplicits._
 
 object VimeoModule extends AbstractModule {
   val uri = "https://vimeo.com/"

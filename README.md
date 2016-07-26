@@ -9,20 +9,25 @@ A command line tool to detect shared passwords
 List options:
 
 ```
-$ java -jar shard.jar --help
-Shard 1.4
-Usage: java -jar shard-1.4.jar [options]
+Shard (1.5) can run in 3 modes:
+
+1) Single user single password          - Use -u and -p
+2) Single user multiple passwords       - Use -u and -f
+3) Multiple users and multple passwords - Use -f only
+
+For more detailed usage examples see the wiki.
+    
+Usage: java -jar shard-1.5.jar [options]
 
   -u, --username <value>  Username to test
   -p, --password <value>  Password to test
-  -f, --file <value>      File containing a set of credentials
+  -f, --file <value>      A path to a file containing a set of credentials or passwords
   --format <value>        The format of the credentials. Must be a regular expression with 2 capture groups. The first capture group for the username and the second capture group for the password. Defaults to a regex that will match:
         "username":"password"
   -l, --list              List available modules
   -v, --version           Print the version
   --modules <value>       Only run specific modules. A comma separated list
-  --help                  prints this usage text
-
+  --help                  Prints this usage text
 ```
 
 List available modules:
@@ -41,20 +46,21 @@ Available modules:
         DigitalOcean
         Vimeo
         Laposte
+        DailyMotion
 
 ```
 
-The master branch also has a module for Dailymotion.
 
 ## Examples
 
 Given a username and password shard will attempt to authenticate with multiple sites:
 
 ``` bash
-$ java -jar shard-1.4.jar -u username-here -p password-here
+$ java -jar shard.jar -u username-here -p password-here
 21:16:25.950 [+] Running in single credential mode
 21:16:30.302 [+] username-here:password-here - Reddit, Instagram
 ```
+
 To test multiple credentials supply a filename. By default this expects one credential per line in the format `"username":"password"`. Custom formats can be supplied with the `--format` option
 
 ```
