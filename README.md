@@ -99,7 +99,7 @@ If Scala is not your thing check out the secondary_implementations, these are re
 
 Contact me, join the [Gitter](https://gitter.im/philwantsfish/shard) room, or use this GitHub project
 
-
+Enjoy this project? Consider donating 1EpSQumsD2EFKnisJXjStsUVsXpF4ge8dj
 
 
 
